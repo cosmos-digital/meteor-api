@@ -1,0 +1,9 @@
+framework:
+    messenger:
+        # transports:
+        #     default: "amqp://guest:test@rabbitmq:5672/meteor"
+        #     api: "amqp://meteor:M&t&0R@rabbitmq:5672/meteor/api"
+        # routing:
+        #     'Events\Message\Sender\MessageUser': default
+        #     'Events\Message\Sender\MessageApi': api
+        #     'Events\Message\Sender\CreateUserMessage': users

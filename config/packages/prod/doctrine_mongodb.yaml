@@ -1,0 +1,23 @@
+doctrine_mongodb:
+    connections:
+        default:
+            server: '%env(resolve:MONGODB_URL)%'
+            options:
+                username: root
+                password: test
+                authSource: admin
+                ssl: false
+                authMechanism: SCRAM-SHA-1
+                db: '%env(MONGODB_DB)%'
+
+    default_database: meteor_invoices
+    document_managers:
+        default:
+            auto_mapping: true
+            mappings:
+                App:
+                    is_bundle: false
+                    type: yml
+                    dir: '%kernel.project_dir%/config/mappings/mongodb/'
+                    prefix: 'Meteor\Invoice\Domain\Models'
+                    alias: App
