@@ -18,6 +18,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "sensio/framework-extra-bundle": "^5.1",
+        "doctrine/mongodb-odm-bundle": "*",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
@@ -28,6 +29,7 @@
         "symfony/messenger": "4.2.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/orm-pack": "*",
+        "doctrine/mongodb":"*",
         "symfony/process": "4.2.*",
         "symfony/security-bundle": "4.2.*",
         "symfony/serializer-pack": "*",
@@ -40,7 +42,8 @@
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/test-pack": "*",
-        "symfony/browser-kit": "*"
+        "symfony/browser-kit": "*",
+        "doctrine/doctrine-fixtures-bundle":"*"
     },
     "config": {
         "preferred-install": {
