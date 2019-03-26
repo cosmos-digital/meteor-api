@@ -12,7 +12,7 @@ pipeline {
       steps{
         stash name: 'api-stash', includes: '**'
         dir('/data/meteor/data/php/api/www') {
-            sh 'mkdir var && chmod 666 var/ -R'
+            sh 'mkdir var && chmod 777 var/ -R'
             unstash 'api-stash'
         }
       }
