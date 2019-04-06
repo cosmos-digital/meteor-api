@@ -34,7 +34,6 @@ class AuthenticateController extends AbstractController
                 ->setStatusCode($jsonResponse::HTTP_CREATED);
 
         } catch (\Exception $ex) {
-
         }
         return $jsonResponse;
     }

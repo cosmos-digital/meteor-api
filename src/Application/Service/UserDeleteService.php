@@ -6,55 +6,56 @@ use App\Entity\User;
 use App\Infrastructure\Repository\IUserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-final class AccountCreateService implements IAccountCreateService
+final class UserDeleteService implements IUserDeleteService
 {
     private $userRepository;
-    private $validator;
     private $jsonResponse;
-
     /**
      * __construct
      *
-     * @param App\Application\Service\IEntityValidateService $validator
      * @param App\Infrastructure\Repository\IUserRepository $userRepository
      * @param Symfony\Component\HttpFoundation\JsonResponse $jsonResponse
-     *
      * @return void
      */
     public function __construct(
-        IEntityValidateService $validator,
         IUserRepository $userRepository,
         JsonResponse $jsonResponse
     ) {
-        $this->validator = $validator;
         $this->userRepository = $userRepository;
         $this->jsonResponse = $jsonResponse;
     }
 
     /**
-     * create
+     * deleteByUid
      *
-     * @param App\Entity\User $user
+     * @param string $uid
      *
      * @return void
      */
-    public function create(User $user): void
+    public function deleteByUid(string $uid): void
     {
-        $errors = $this->validator->validate($user);
+        $user = $this->userRepository->findById(
+            $uid
+        );
 
-        if (!empty($errors)) {
+        if (!isset($user)) {
 
             $this->jsonResponse
-                ->setData($errors)
-                ->setStatusCode($this->jsonResponse::HTTP_BAD_REQUEST);
+                ->setData([
+                    'message' => 'User not found',
+                    'property_path' => 'user_not_found',
+                ])
+                ->setStatusCode(
+                    $this->jsonResponse::HTTP_BAD_REQUEST
+                );
 
             throw new \InvalidArgumentException();
         }
 
-        $this->userRepository->save($user);
+        $this->userRepository->delete($user);
 
-        $this->jsonResponse
-            ->setData(['id' => $user->getId()])
-            ->setStatusCode($this->jsonResponse::HTTP_CREATED);
+        $this->jsonResponse->setStatusCode(
+            $this->jsonResponse::HTTP_NO_CONTENT
+        );
     }
 }

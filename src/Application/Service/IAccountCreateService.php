@@ -4,6 +4,7 @@ namespace App\Application\Service;
 
 use App\Entity\User;
 use App\Infrastructure\Repository\IUserRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 interface IAccountCreateService
 {
@@ -12,10 +13,11 @@ interface IAccountCreateService
      *
      * @param App\Application\Service\IEntityValidateService $validator
      * @param App\Infrastructure\Repository\IUserRepository $userRepository
+     * @param Symfony\Component\HttpFoundation\JsonResponse $jsonResponse
      *
      * @return void
      */
-    public function __construct(IEntityValidateService $validator, IUserRepository $userRepository);
+    public function __construct(IEntityValidateService $validator, IUserRepository $userRepository, JsonResponse $jsonResponse);
 
     /**
      * create

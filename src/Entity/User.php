@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -12,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @UniqueEntity(fields="token", message="Token already taken")
  * @UniqueEntity(fields="username", message="Username already taken")
- * @ORM\Table(schema="users")
+ * @Gedmo\SoftDeleteable(fieldName="deleted_at", timeAware=false)
+ * @ORM\Table(schema="accounts")
  */
 class User implements UserInterface, JWTUserInterface, IEntity
 {
@@ -39,9 +41,24 @@ class User implements UserInterface, JWTUserInterface, IEntity
     private $password;
 
     /**
-     * @Assert\EqualTo(propertyPath="password", message="These passwords do not match. Try again.")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
-    public $password_repeat;
+    private $created_at;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $updated_at;
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    private $deleted_at;
 
     /**
      * @ORM\Column(type="string", length=64, nullable=true)
@@ -72,10 +89,6 @@ class User implements UserInterface, JWTUserInterface, IEntity
      */
     public static function createFromPayload($username, array $payload)
     {
-        if (isset($payload['roles'])) {
-            return new self($username, (array) $payload['roles']);
-        }
-
         return new self($username);
     }
     /**
@@ -122,5 +135,71 @@ class User implements UserInterface, JWTUserInterface, IEntity
     public function eraseCredentials()
     {
 
+    }
+
+    /**
+     * getCreatedAt
+     *
+     * @return void
+     */
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * setCreatedAt
+     *
+     * @param \DateTime $created_at
+     *
+     * @return void
+     */
+    public function setCreatedAt(?\DateTime $created_at = null): void
+    {
+        $this->created_at = $created_at;
+    }
+
+    /**
+     * getUpdatedAt
+     *
+     * @return void
+     */
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updated_at;
+    }
+
+    /**
+     * setUpdatedAt
+     *
+     * @param \DateTime $updated_at
+     *
+     * @return void
+     */
+    public function setUpdatedAt(?\DateTime $updated_at = null): void
+    {
+        $this->updated_at = $updated_at;
+    }
+
+    /**
+     * getDeletedAt
+     *
+     * @return void
+     */
+    public function getDeletedAt(): ?\DateTime
+    {
+        return $this->deleted_at;
+    }
+
+    /**
+     * setDeletedAt
+     *
+     * @param \DateTime $deleted_at
+     *
+     * @return void
+     */
+    public function setDeletedAt(?\DateTime $deleted_at = null): void
+    {
+        $this->deleted_at = $deleted_at;
     }
 }
