@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields="username", message="Username already taken")
  * @ORM\Table(schema="users")
  */
-class User implements UserInterface, IEntity
+class User implements UserInterface, JWTUserInterface, IEntity
 {
     /**
      *
@@ -43,11 +44,11 @@ class User implements UserInterface, IEntity
     public $password_repeat;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=64, nullable=true)
      */
     public $token;
 
-    public function __construct(string $username, string $password)
+    public function __construct(string $username, string $password = null)
     {
         $this->username = $username;
         $this->password = $password;
@@ -56,6 +57,7 @@ class User implements UserInterface, IEntity
     {
         return $this->uid;
     }
+
     /**
      * Returns the roles granted to the user.
      * @return (Role|string)[] The user roles
@@ -66,6 +68,17 @@ class User implements UserInterface, IEntity
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function createFromPayload($username, array $payload)
+    {
+        if (isset($payload['roles'])) {
+            return new self($username, (array) $payload['roles']);
+        }
+
+        return new self($username);
+    }
+    /**
      * Returns the password used to authenticate the user.
      *
      * This should be the encoded password. On authentication, a plain-text
@@ -73,7 +86,7 @@ class User implements UserInterface, IEntity
      *
      * @return string The password
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }

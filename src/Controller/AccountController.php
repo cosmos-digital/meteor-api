@@ -2,39 +2,36 @@
 
 namespace App\Controller;
 
-use App\Application\Service\IAuthenticateService;
+use App\Application\Service\IAccountCreateService;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AuthenticateController extends AbstractController
+class AccountController extends AbstractController
 {
     /**
-     * @Route("/api/signin", name="api_signin", methods={"POST"}))
+     * @Route("/api/signup", name="api_account_create", methods={"POST"}))
      */
-    public function signin(
+    public function signup(
         Request $request,
         JsonResponse $jsonResponse,
-        IAuthenticateService $authenticateService
+        IAccountCreateService $accountCreateService
     ) {
         try {
+            $password_encode = password_hash($request->get('password'), PASSWORD_BCRYPT);
             $user = new User(
                 $request->get('username'),
-                $request->get('password')
+                $password_encode
             );
 
-            $token = $authenticateService
-                ->authenticate($user)
-                ->getToken();
+            $user->password_repeat = $password_encode;
 
-            $jsonResponse
-                ->setData(['token' => $token])
-                ->setStatusCode($jsonResponse::HTTP_CREATED);
+            $accountCreateService->create($user);
 
         } catch (\Exception $ex) {
-
+            \var_dump($ex);
         }
         return $jsonResponse;
     }

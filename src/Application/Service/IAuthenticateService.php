@@ -2,7 +2,9 @@
 namespace App\Application\Service;
 
 use App\Entity\User;
+use App\Infrastructure\Repository\IUserRepository;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 interface IAuthenticateService
 {
@@ -10,10 +12,11 @@ interface IAuthenticateService
      * __construct
      *
      * @param JWTTokenManagerInterface $JWTManager
-     *
+     * @param IUserRepository $userRepository
+     * @param JsonResponse $jsonResponse
      * @return void
      */
-    public function __construct(JWTTokenManagerInterface $JWTManager);
+    public function __construct(JWTTokenManagerInterface $JWTManager, IUserRepository $userRepository, JsonResponse $jsonResponse);
     /**
      * authenticate
      *
