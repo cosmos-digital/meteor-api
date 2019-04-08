@@ -22,9 +22,16 @@ class AccountController extends AbstractController
         TranslatorInterface $translator
     ) {
         try {
-            $password_encode = password_hash($request->get('password'), PASSWORD_BCRYPT);
 
-            if (!password_verify($request->get('password_repeat'), $password_encode)) {
+            $user = new User(
+                $request->get('username')
+            );
+            $user->setPassword(
+                $request->get('password')
+            );
+
+            if (!password_verify($request->get('password_repeat'), $user->getPassword())) {
+               
                 $jsonResponse
                     ->setData([
                         'message' => $translator->trans('These passwords do not match. Try again.'),
@@ -34,11 +41,6 @@ class AccountController extends AbstractController
 
                 throw new \InvalidArgumentException();
             }
-
-            $user = new User(
-                $request->get('username'),
-                $password_encode
-            );
 
             $accountCreateService->create($user);
 

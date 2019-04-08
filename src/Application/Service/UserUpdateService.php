@@ -6,10 +6,11 @@ use App\Entity\User;
 use App\Infrastructure\Repository\IUserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-final class UserDeleteService implements IUserDeleteService
+class UserUpdateService implements IUserUpdateService
 {
     private $userRepository;
     private $jsonResponse;
+
     /**
      * __construct
      *
@@ -26,36 +27,32 @@ final class UserDeleteService implements IUserDeleteService
     }
 
     /**
-     * deleteByUid
+     * updatePassword
      *
      * @param string $uid
+     * @param string $password
+     * @param string $new_password
      *
      * @return void
      */
-    public function deleteByUid(string $uid): void
+    public function updatePassword(string $uid, string $password, string $new_password): void
     {
-        $user = $this->userRepository->findById(
-            $uid
-        );
+        $user = $this->userRepository->findById($uid);
 
-        if (!isset($user)) {
-
-            $this->jsonResponse
-                ->setData([
-                    'message' => 'User not found',
-                    'property_path' => 'user_not_found',
-                ])
-                ->setStatusCode(
-                    $this->jsonResponse::HTTP_BAD_REQUEST
-                );
+        if (!password_verify($password, $user->getPassword())) {
+            $this->jsonResponse->setData(
+                [
+                    "message" => "Current Password Invalid",
+                    "property_path" => "password",
+                ]
+            )->setStatusCode(
+                $this->jsonResponse::HTTP_BAD_REQUEST
+            );
 
             throw new \InvalidArgumentException();
         }
 
-        $this->userRepository->delete($user);
-
-        $this->jsonResponse->setStatusCode(
-            $this->jsonResponse::HTTP_NOT_FOUND
-        );
+        $user->setPassword($new_password);
+        $this->userRepository->save($user);
     }
 }

@@ -65,11 +65,28 @@ class User implements UserInterface, JWTUserInterface, IEntity
      */
     public $token;
 
-    public function __construct(string $username, string $password = null)
+    public function __construct(string $username)
     {
         $this->username = $username;
-        $this->password = $password;
     }
+
+    /**
+     * setPassword
+     *
+     * @param  mixed $password
+     *
+     * @return void
+     */
+    public function setPassword(string $password): void
+    {
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
+    }
+
+    /**
+     * getId
+     *
+     * @return string
+     */
     public function getId(): ?string
     {
         return $this->uid;
@@ -148,18 +165,6 @@ class User implements UserInterface, JWTUserInterface, IEntity
     }
 
     /**
-     * setCreatedAt
-     *
-     * @param \DateTime $created_at
-     *
-     * @return void
-     */
-    public function setCreatedAt(?\DateTime $created_at = null): void
-    {
-        $this->created_at = $created_at;
-    }
-
-    /**
      * getUpdatedAt
      *
      * @return void
@@ -170,18 +175,6 @@ class User implements UserInterface, JWTUserInterface, IEntity
     }
 
     /**
-     * setUpdatedAt
-     *
-     * @param \DateTime $updated_at
-     *
-     * @return void
-     */
-    public function setUpdatedAt(?\DateTime $updated_at = null): void
-    {
-        $this->updated_at = $updated_at;
-    }
-
-    /**
      * getDeletedAt
      *
      * @return void
@@ -189,17 +182,5 @@ class User implements UserInterface, JWTUserInterface, IEntity
     public function getDeletedAt(): ?\DateTime
     {
         return $this->deleted_at;
-    }
-
-    /**
-     * setDeletedAt
-     *
-     * @param \DateTime $deleted_at
-     *
-     * @return void
-     */
-    public function setDeletedAt(?\DateTime $deleted_at = null): void
-    {
-        $this->deleted_at = $deleted_at;
     }
 }

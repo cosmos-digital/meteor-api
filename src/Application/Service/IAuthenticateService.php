@@ -17,14 +17,16 @@ interface IAuthenticateService
      * @return void
      */
     public function __construct(JWTTokenManagerInterface $JWTManager, IUserRepository $userRepository, JsonResponse $jsonResponse);
+
     /**
      * authenticate
      *
-     * @param App\Entity\User $user
+     * @param string $username
+     * @param string $password
      *
      * @return IAuthenticateService
      */
-    public function authenticate(User $user): IAuthenticateService;
+    public function authenticate(string $username, string $password): IAuthenticateService;
 
     /**
      * getToken

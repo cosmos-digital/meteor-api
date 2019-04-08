@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthenticateService implements IAuthenticateService
 {
+    private $user;
     private $token;
     private $JWTManager;
     private $userRepository;
@@ -34,15 +35,16 @@ class AuthenticateService implements IAuthenticateService
     /**
      * authenticate
      *
-     * @param App\Entity\User mixed $user
+     * @param string $username
+     * @param string $password
      *
      * @return IAuthenticateService
      */
-    public function authenticate(User $user): IAuthenticateService
+    public function authenticate(string $username, string $password): IAuthenticateService
     {
         $this->user = $this->userRepository
             ->findUserByUsername(
-                $user->getUsername()
+                $username
             );
 
         if (!isset($this->user)) {
@@ -56,7 +58,7 @@ class AuthenticateService implements IAuthenticateService
 
             throw new \InvalidArgumentException();
 
-        } elseif (!\password_verify($user->getPassword(), $this->user->getPassword())) {
+        } elseif (!\password_verify($password, $this->user->getPassword())) {
 
             $this->jsonResponse
                 ->setData([

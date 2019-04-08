@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Application\Service\IAuthenticateService;
-use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,13 +19,12 @@ class AuthenticateController extends AbstractController
         IAuthenticateService $authenticateService
     ) {
         try {
-            $user = new User(
-                $request->get('username'),
-                $request->get('password')
-            );
 
             $token = $authenticateService
-                ->authenticate($user)
+                ->authenticate(
+                    $request->get('username'),
+                    $request->get('password')
+                )
                 ->getToken();
 
             $jsonResponse
