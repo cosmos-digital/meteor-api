@@ -21,6 +21,7 @@
         "doctrine/mongodb-odm-bundle": "*",
         "easycorp/easy-log-handler": "*",
         "lexik/jwt-authentication-bundle": "^2.6",
+        "opis/json-schema": "^1.0",
         "php-amqplib/php-amqplib": "^2.8",
         "php-amqplib/rabbitmq-bundle": "^1.14",
         "sensio/framework-extra-bundle": "^5.1",
