@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://api.example.com/profile.json#",
+    "type": "object",
+    "properties": {
+        "username": {
+            "type": "string",
+            "format": "email"
+        },
+        "password": {
+            "type": "string",
+            "minLenght": 8,
+            "maxLength": 128
+        }
+    },
+    "required": [
+        "email",
+        "password"
+    ],
+    "additionalProperties": false
+}

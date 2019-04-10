@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Application\Service\IAccountCreateService;
+use App\Application\Service\IJsonSchemaValidatorService;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,20 +19,24 @@ class AccountController extends AbstractController
     public function signup(
         Request $request,
         JsonResponse $jsonResponse,
+        IJsonSchemaValidatorService $jsonValidatorService,
         IAccountCreateService $accountCreateService,
         TranslatorInterface $translator
     ) {
         try {
+            $jsonValidatorService->validate();
+
+            $request_user = $request->get('user');
 
             $user = new User(
-                $request->get('username')
+                $request_user['email']
             );
             $user->setPassword(
-                $request->get('password')
+                $request_user['password']
             );
 
-            if (!password_verify($request->get('password_repeat'), $user->getPassword())) {
-               
+            if (!password_verify($request_user['password_repeat'], $user->getPassword())) {
+
                 $jsonResponse
                     ->setData([
                         'message' => $translator->trans('These passwords do not match. Try again.'),
@@ -56,6 +61,8 @@ class AccountController extends AbstractController
             )->setStatusCode(
                 $jsonResponse::HTTP_ALREADY_REPORTED
             );
+
+        } catch (\InvalidArgumentException $ex) {
 
         } catch (\Exception $ex) {
         }

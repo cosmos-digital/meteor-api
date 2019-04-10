@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Application\Service\IJsonSchemaValidatorService;
 use App\Application\Service\IUserDeleteService;
 use App\Application\Service\IUserUpdateService;
 use App\Entity\User;
@@ -10,7 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use JsonSchema\Validator;
 
 class UserController extends AbstractController
 {
@@ -45,28 +45,12 @@ class UserController extends AbstractController
         string $uid,
         Request $request,
         JsonResponse $jsonResponse,
+        IJsonSchemaValidatorService $jsonValidatorService,
         IUserUpdateService $userUpdateService,
         TranslatorInterface $translator
     ) {
         try {
-            $data = json_decode($request->getContent(), true);
-            $validator = new Validator();
-            $validation = $validator->validate(
-                $data,
-                (object)[
-                    "type" => "array",
-                    "properties" => (object)[
-                        "new_layout" => (object)[
-                            "type"=> "string"
-                        ]
-                    ],
-                    "required" => [
-                        "new_layout"
-                ]
-            ]);
-            if(!$validator->isValid()){
-                var_dump('oii');
-            }
+            $jsonValidatorService->validate();
             $password = $request->get('password');
             $new_password = password_hash($request->get('new_password'), PASSWORD_BCRYPT);
 
