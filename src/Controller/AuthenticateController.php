@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Application\Service\IAuthenticateService;
+use App\Application\Service\IJsonSchemaValidatorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +17,11 @@ class AuthenticateController extends AbstractController
     public function signin(
         Request $request,
         JsonResponse $jsonResponse,
-        IAuthenticateService $authenticateService
+        IAuthenticateService $authenticateService,
+        IJsonSchemaValidatorService $jsonValidatorService
     ) {
         try {
+            $jsonValidatorService->validate();
 
             $token = $authenticateService
                 ->authenticate(

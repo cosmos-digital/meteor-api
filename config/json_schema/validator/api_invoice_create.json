@@ -1,0 +1,252 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://api.example.com/profile.json#",
+    "type": "object",
+    "properties": {
+        "acquirer": {
+            "type": "object",
+            "properties": {
+                "nif": {
+                    "type": "integer",
+                    "maxLength": 9,
+                    "minLength": 9
+                },
+                "firstname": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 3
+                },
+                "address": {
+                    "type": "object",
+                    "properties": {
+                        "billing": {
+                            "type": "object",
+                            "properties": {
+                                "street": {
+                                    "type": "string",
+                                    "minLenght": 1,
+                                    "maxLength": 128
+                                },
+                                "number": {
+                                    "type": "number",
+                                    "minLenght": 1,
+                                    "maxLength": 128,
+                                    "minimum": 0
+                                },
+                                "zipcode": {
+                                    "type": "string",
+                                    "minLenght": 7,
+                                    "maxLength": 7,
+                                    "minimum": 0
+                                },
+                                "obs": {
+                                    "type": "string",
+                                    "minLenght": 1,
+                                    "maxLength": 255
+                                }
+                            },
+                            "required": [
+                                "street",
+                                "number",
+                                "zipcode"
+                            ],
+                            "additionalProperties": false
+                        },
+                        "delivery": {
+                            "type": "object",
+                            "properties": {
+                                "street": {
+                                    "type": "string",
+                                    "minLenght": 1,
+                                    "maxLength": 128
+                                },
+                                "number": {
+                                    "type": "number",
+                                    "minLenght": 1,
+                                    "maxLength": 128,
+                                    "minimum": 0
+                                },
+                                "zipcode": {
+                                    "type": "string",
+                                    "minLenght": 7,
+                                    "maxLength": 7,
+                                    "minimum": 0
+                                },
+                                "obs": {
+                                    "type": "string",
+                                    "minLenght": 1,
+                                    "maxLength": 255
+                                }
+                            },
+                            "required": [
+                                "street",
+                                "number",
+                                "zipcode"
+                            ]
+                        }
+                    }
+                }
+            },
+            "required": [
+                "nif"
+            ]
+        },
+        "serie": {
+            "type": "object",
+            "properties": {
+                "initials": {
+                    "type": "string",
+                    "minLenght": 4,
+                    "maxLength": 128
+                }
+            },
+            "required": [
+                "initials"
+            ]
+        },
+        "products": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "minLenght": 1,
+                        "maxLength": 128
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "description": {
+                        "type": "string",
+                        "minLenght": 1,
+                        "maxLength": 128
+                    },
+                    "type": {
+                        "enum": [
+                            "kg",
+                            "un"
+                        ]
+                    },
+                    "iva": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "enum": [
+                                    "NOR",
+                                    "ISE",
+                                    "RED",
+                                    "INT"
+                                ]
+                            },
+                            "reason": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "code"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "code",
+                            "reason"
+                        ]
+                    }
+                },
+                "required": [
+                    "code",
+                    "quantity",
+                    "iva"
+                ]
+            },
+            "required": [
+                "initials"
+            ],
+            "additionalProperties": false
+        },
+        "services": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "minLenght": 1,
+                        "maxLength": 128
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "description": {
+                        "type": "string",
+                        "minLenght": 1,
+                        "maxLength": 128
+                    },
+                    "type": {
+                        "enum": [
+                            "kg",
+                            "un"
+                        ]
+                    },
+                    "iva": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "enum": [
+                                    "NOR",
+                                    "ISE",
+                                    "RED",
+                                    "INT"
+                                ]
+                            },
+                            "reason": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "code",
+                            "reason"
+                        ]
+                    }
+                },
+                "required": [
+                    "code",
+                    "quantity",
+                    "iva"
+                ]
+            },
+            "required": [
+                "initials"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "acquirer",
+        "serie",
+        "products"
+    ],
+    "additionalProperties": false
+}
